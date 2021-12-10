@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Map from './components/map/Map';
-
 import './App.scss';
 import WmsLayer from './components/map/wms-layer/WmsLayer';
-const arr = [
-  {
-    url: 'https://kampus.ankageo.com/geoserver/kampus/wms',
-    layername: ['Fakulte_usr'],
-    visible: true,
-  }
-]
+import { useAppSelector } from './redux/hooks';
+import { useDispatch } from 'react-redux';
+import { actionInitWmsLayers } from './redux/action/wms';
+
 function App() {
+  
+  const wmsLayers = useAppSelector(state => state.wms.layers);
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(actionInitWmsLayers())
+  }, []);
   return (
     <div className="App">
       <div className="sidebar">
@@ -19,7 +21,7 @@ function App() {
       </div>
       <div className="map-container">
         <Map>
-          {arr.map(a =>
+          {wmsLayers.map(a =>
             <WmsLayer
               key={a.url + a.layername}
               url={a.url}
