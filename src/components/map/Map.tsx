@@ -1,4 +1,4 @@
-import React, { useEffect, PropsWithChildren, useState } from 'react'
+import React, { useEffect, PropsWithChildren, useState, useRef } from 'react'
 import { Map as OlMap, View, } from 'ol'
 import { OSM } from 'ol/source'
 import { Tile } from 'ol/layer'
@@ -8,14 +8,15 @@ import { MapContext } from './MapContext';
 interface Props { }
 
 export default function Map(props: PropsWithChildren<Props>) {
-    const [olMap, setOlMap] = useState<OlMap | null>(null)
+    const mapRef = useRef(document.createElement('div'))
+    const [olMap, setOlMap] = useState<OlMap | null>(null);
     useEffect(() => {
         const map = new OlMap({
             view: new View({
                 center: [0, 0],
                 zoom: 2
             }),
-            target: 'map',
+            target: mapRef.current,
             layers: [
                 new Tile({ source: new OSM() })
             ],
@@ -27,7 +28,7 @@ export default function Map(props: PropsWithChildren<Props>) {
     }, []);
     return (
         <>
-            <div className='Map' id="map"></div>
+            <div className='Map' ref={mapRef}></div>
             {
                 olMap &&
                 <MapContext.Provider value={olMap}>
