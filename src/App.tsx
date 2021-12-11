@@ -30,6 +30,16 @@ function App() {
           )}
 
         </Map>
+        <Map>
+          {wmsLayers.map(a =>
+            <WmsLayer
+              key={a.url + a.layername}
+              url={a.url}
+              layername={a.layername}
+              visible={!a.visible}></WmsLayer>
+          )}
+
+        </Map>
       </div>
     </div>
   );
