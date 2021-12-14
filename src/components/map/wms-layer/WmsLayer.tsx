@@ -1,29 +1,31 @@
-import React, { createRef, useContext, useEffect, useRef } from 'react'
+import React, { createRef, PropsWithChildren, useContext, useEffect, useRef } from 'react'
 import { Tile } from 'ol/layer'
 import { TileWMS } from 'ol/source'
 import { MapContext } from '../MapContext'
+import { WmsLayerContext } from './WmsLayerContext'
 interface Props {
     url: string;
     layername: string[];
     visible: boolean;
 }
-export default function WmsLayer(props: Props) {
+export default function WmsLayer(props: PropsWithChildren<Props>) {
     const map = useContext(MapContext)
-    const t = useRef<Tile<any> | null>(null)
+    const t = useRef<Tile<TileWMS>>(new Tile())
     useEffect(() => {
-        const tileLayer = new Tile({
-            source: new TileWMS({
-                params: {
-                    layers: props.layername
-                },
-                url: props.url,
-            }),
-            visible: props.visible
-        });
-        t.current = tileLayer
+        const tileLayer = t.current!;
+        tileLayer.setSource(new TileWMS({
+            params: {
+                layers: props.layername
+            },
+            url: props.url,
+        }));
+        tileLayer.setVisible(props.visible)
+
         map.addLayer(tileLayer);
 
+        console.log('INIT')
         return () => {
+            console.log('DESTROY')
             map.removeLayer(tileLayer);
         }
     }, []);
@@ -32,6 +34,5 @@ export default function WmsLayer(props: Props) {
         const tileLayer = t.current!;
         tileLayer.setVisible(props.visible)
     }, [props.visible])
-
-    return null;
+    return <WmsLayerContext.Provider value={t.current}>{props.children}</WmsLayerContext.Provider>;
 }

@@ -4,7 +4,8 @@ import { OSM } from 'ol/source'
 import { Tile } from 'ol/layer'
 import './Map.scss';
 import { MapContext } from './MapContext';
-import { ViewContext } from './ViewContext';
+import { ViewContext } from './view/ViewContext';
+
 
 interface Props { }
 

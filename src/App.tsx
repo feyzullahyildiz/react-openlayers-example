@@ -7,6 +7,7 @@ import { useAppSelector } from './redux/hooks';
 import { useDispatch } from 'react-redux';
 import { actionInitWmsLayers } from './redux/action/wms';
 import View from './components/map/view/View';
+import WmsGetFeatureInfo from './components/map/wms-getfeatureinfo/WmsGetFeatureInfo';
 
 function App() {
   
@@ -28,7 +29,9 @@ function App() {
                 key={a.url + a.layername}
                 url={a.url}
                 layername={a.layername}
-                visible={a.visible}></WmsLayer>
+                visible={a.visible}>
+                  {a.visible && <WmsGetFeatureInfo />}
+                </WmsLayer>
             )}
 
           </Map>

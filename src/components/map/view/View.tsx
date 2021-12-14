@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react'
-import { ViewContext } from '../ViewContext'
+import { ViewContext } from './ViewContext'
 import OlView from 'ol/View';
 interface Props {
     centerX: number;
