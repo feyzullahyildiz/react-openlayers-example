@@ -6,6 +6,7 @@ import WmsLayer from './components/map/wms-layer/WmsLayer';
 import { useAppSelector } from './redux/hooks';
 import { useDispatch } from 'react-redux';
 import { actionInitWmsLayers } from './redux/action/wms';
+import View from './components/map/view/View';
 
 function App() {
   
@@ -20,26 +21,28 @@ function App() {
         <Sidebar></Sidebar>
       </div>
       <div className="map-container">
-        <Map>
-          {wmsLayers.map(a =>
-            <WmsLayer
-              key={a.url + a.layername}
-              url={a.url}
-              layername={a.layername}
-              visible={a.visible}></WmsLayer>
-          )}
+        <View centerX={3265008} centerY={4674636} zoom={16}>
+          <Map>
+            {wmsLayers.map(a =>
+              <WmsLayer
+                key={a.url + a.layername}
+                url={a.url}
+                layername={a.layername}
+                visible={a.visible}></WmsLayer>
+            )}
 
-        </Map>
-        <Map>
-          {wmsLayers.map(a =>
-            <WmsLayer
-              key={a.url + a.layername}
-              url={a.url}
-              layername={a.layername}
-              visible={!a.visible}></WmsLayer>
-          )}
+          </Map>
+          <Map>
+            {wmsLayers.map(a =>
+              <WmsLayer
+                key={a.url + a.layername}
+                url={a.url}
+                layername={a.layername}
+                visible={!a.visible}></WmsLayer>
+            )}
 
-        </Map>
+          </Map>
+        </View>
       </div>
     </div>
   );

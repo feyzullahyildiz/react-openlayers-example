@@ -1,21 +1,24 @@
-import React, { useEffect, PropsWithChildren, useState, useRef } from 'react'
+import React, { useEffect, PropsWithChildren, useState, useRef, useContext } from 'react'
 import { Map as OlMap, View, } from 'ol'
 import { OSM } from 'ol/source'
 import { Tile } from 'ol/layer'
 import './Map.scss';
 import { MapContext } from './MapContext';
+import { ViewContext } from './ViewContext';
 
 interface Props { }
 
 export default function Map(props: PropsWithChildren<Props>) {
     const mapRef = useRef(document.createElement('div'))
     const [olMap, setOlMap] = useState<OlMap | null>(null);
+    const view = useContext(ViewContext)
     useEffect(() => {
+        const v = view || new View({
+            center: [0, 0],
+            zoom: 2
+        });
         const map = new OlMap({
-            view: new View({
-                center: [0, 0],
-                zoom: 2
-            }),
+            view: v,
             target: mapRef.current,
             layers: [
                 new Tile({ source: new OSM() })
