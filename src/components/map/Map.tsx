@@ -1,4 +1,4 @@
-import React, { useEffect, PropsWithChildren, useState, useRef, useContext } from 'react'
+import { useEffect, PropsWithChildren, useState, useRef, useContext } from 'react'
 import { Map as OlMap, View, } from 'ol'
 import { OSM } from 'ol/source'
 import { Tile } from 'ol/layer'
@@ -29,6 +29,7 @@ export default function Map(props: PropsWithChildren<Props>) {
         return () => {
             map.dispose();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <>

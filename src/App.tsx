@@ -10,11 +10,12 @@ import View from './components/map/view/View';
 import WmsGetFeatureInfo from './components/map/wms-getfeatureinfo/WmsGetFeatureInfo';
 
 function App() {
-  
+
   const wmsLayers = useAppSelector(state => state.wms.layers);
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(actionInitWmsLayers())
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="App">

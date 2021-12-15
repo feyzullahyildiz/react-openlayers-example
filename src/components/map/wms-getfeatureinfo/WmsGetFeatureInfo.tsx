@@ -1,5 +1,5 @@
 import { MapBrowserEvent } from 'ol';
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { MapContext } from '../MapContext';
 import { WmsLayerContext } from '../wms-layer/WmsLayerContext';
 
@@ -30,6 +30,7 @@ export default function WmsGetFeatureInfo() {
         return () => {
             map.un('click', onClick)
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return null;

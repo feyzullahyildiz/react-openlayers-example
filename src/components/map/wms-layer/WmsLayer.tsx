@@ -1,4 +1,4 @@
-import React, { createRef, PropsWithChildren, useContext, useEffect, useRef } from 'react'
+import { PropsWithChildren, useContext, useEffect, useRef } from 'react'
 import { Tile } from 'ol/layer'
 import { TileWMS } from 'ol/source'
 import { MapContext } from '../MapContext'
@@ -28,6 +28,7 @@ export default function WmsLayer(props: PropsWithChildren<Props>) {
             console.log('DESTROY')
             map.removeLayer(tileLayer);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
