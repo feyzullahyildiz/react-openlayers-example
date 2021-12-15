@@ -1,25 +1,28 @@
+import { RestApi } from "../../util/restapi";
 import { AppDispatch } from "../store"
 
 
-export const actionInitWmsLayers = () => (dispatch: AppDispatch) => {
-    const arr = [
-        {
-            url: 'https://kampus.ankageo.com/geoserver/kampus/wms',
-            layername: ['Fakulte_usr'],
-            visible: true,
-        }
-    ]
-    dispatch({
-        type: 'SET_WMS_LAYERS',
-        payload: arr
-    });
+export const actionInitWmsLayers = () => async (dispatch: AppDispatch) => {
+    try {
+        const services = await RestApi.getServices()
+        dispatch({
+            type: 'SET_WMS_LAYERS',
+            payload: services.services.services
+        });
+    } catch (error) {
+        dispatch({
+            type: 'SET_WMS_LAYERS',
+            payload: []
+        });
+        
+    }
 }
 
-export const actionChangeWmsLayerVisibility = (index: number, visible: boolean) => {
+export const actionChangeWmsLayerVisibility = (serviceId: number, layerId: number, visible: boolean) => {
     return {
         type: 'CHANGE_WMS_LAYER_VISIBILITY',
         payload: {
-            index, visible
+            serviceId, layerId, visible
         }
     }
 }

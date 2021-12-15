@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Sidebar from './components/Sidebar';
+import Sidebar from './components/sidebar/Sidebar';
 import Map from './components/map/Map';
 import './App.scss';
 import WmsLayer from './components/map/wms-layer/WmsLayer';
@@ -11,11 +11,11 @@ import WmsGetFeatureInfo from './components/map/wms-getfeatureinfo/WmsGetFeature
 
 function App() {
 
-  const wmsLayers = useAppSelector(state => state.wms.layers);
+  const serviceList = useAppSelector(state => state.wms.serviceList);
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(actionInitWmsLayers())
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="App">
@@ -25,24 +25,14 @@ function App() {
       <div className="map-container">
         <View centerX={3265008} centerY={4674636} zoom={16}>
           <Map>
-            {wmsLayers.map(a =>
+            {serviceList.map(ss =>
               <WmsLayer
-                key={a.url + a.layername}
-                url={a.url}
-                layername={a.layername}
-                visible={a.visible}>
-                  {a.visible && <WmsGetFeatureInfo />}
-                </WmsLayer>
-            )}
-
-          </Map>
-          <Map>
-            {wmsLayers.map(a =>
-              <WmsLayer
-                key={a.url + a.layername}
-                url={a.url}
-                layername={a.layername}
-                visible={!a.visible}></WmsLayer>
+                key={ss.id}
+                url={ss.url + '/wms'}
+                layername={ss.layers.filter(l => l.visible).map(l => l.name)}
+              >
+                {<WmsGetFeatureInfo />}
+              </WmsLayer>
             )}
 
           </Map>

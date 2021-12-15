@@ -1,13 +1,10 @@
+import { IService } from "../../util/model";
 
 interface InitialState {
-    layers: {
-        url: string;
-        layername: string[];
-        visible: boolean;
-    }[]
+    serviceList: IService[]
 }
 const initialState: InitialState = {
-    layers: []
+    serviceList: []
 }
 interface DefaultAction {
     type: string;
@@ -17,22 +14,35 @@ export const wmsReducer = (state = initialState, action: DefaultAction): Initial
     if (action.type === 'SET_WMS_LAYERS') {
         return {
             ...state,
-            layers: action.payload,
+            serviceList: action.payload,
         }
     }
     if (action.type === 'CHANGE_WMS_LAYER_VISIBILITY') {
-        const { index, visible } = action.payload as { index: number, visible: boolean };
-        const item = state.layers[index];
-        if(!item) {
+        const { serviceId, layerId, visible } = action.payload as { serviceId: number, layerId: number, visible: boolean};
+        const serviceIndex = state.serviceList.findIndex(ss => ss.id === serviceId)
+        if(serviceIndex === -1) {
             return state;
         }
-        state.layers[index] = {
-            ...item,
+        const service = state.serviceList[serviceIndex]!;
+        const layerIndex = service.layers.findIndex(l => l.id === layerId)
+        if(layerIndex === -1) {
+            return state;
+        }
+        const layer = service.layers[layerIndex];
+        const newServiceList = state.serviceList.concat();
+
+        const newLayers = service.layers.concat();
+        newLayers[layerIndex] = {
+            ...layer,
             visible
+        }
+        newServiceList[serviceIndex] = {
+            ...service,
+            layers: newLayers
         }
         return {
             ...state,
-            layers: [...state.layers]
+            serviceList: newServiceList
         }
     }
     return state;

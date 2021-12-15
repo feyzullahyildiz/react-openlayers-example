@@ -1,0 +1,22 @@
+.Sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    .service {
+        .title {
+
+        }
+        .list {
+            display: flex;
+            flex-direction: column;
+            label {
+                display: flex;
+                span {
+                    flex: 1;
+                    text-align: start;
+                    padding: 4px 8px;
+                }
+            }
+        }
+    }
+}
