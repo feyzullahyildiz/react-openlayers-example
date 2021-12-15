@@ -7,7 +7,14 @@ async function getServices() {
     return res.data;
 }
 
+async function getGeojsonFromGetFeatureInfoUrlArray(urlArray: string[]) {
+    const result = await Promise.all(
+        urlArray.map(url => axios.get(url).then(res => res.data.features))
+    )
+    return result;
+}
 export const RestApi = {
-    getServices
+    getServices,
+    getGeojsonFromGetFeatureInfoUrlArray,
 }
 

@@ -6,12 +6,16 @@ import { WmsLayerContext } from './WmsLayerContext'
 interface Props {
     url: string;
     layername: string[];
+    serviceId: number;
+    tag: string;
 }
 export default function WmsLayer(props: PropsWithChildren<Props>) {
     const map = useContext(MapContext)
     const t = useRef<Tile<TileWMS>>(new Tile())
     useEffect(() => {
         const tileLayer = t.current!;
+        tileLayer.set('serviceId', props.serviceId);
+        tileLayer.set('tag', props.tag);
         // console.log('props.layername', props.layername)
         tileLayer.setSource(new TileWMS({
             params: {
