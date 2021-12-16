@@ -10,11 +10,10 @@ export default function Overlay(props: PropsWithChildren<Props>) {
 
     const map = useContext(MapContext)
     const elRef = useRef(document.createElement('div'));
-    const overlayRef = useRef(new OlOverlay({ }));
+    const overlayRef = useRef(new OlOverlay({  }));
     useEffect(() => {
         const overlay = overlayRef.current!;
         map.addOverlay(overlay);
-        overlay.setElement(undefined);
         overlay.setElement(elRef.current);
         return () => {
             map.removeOverlay(overlay)

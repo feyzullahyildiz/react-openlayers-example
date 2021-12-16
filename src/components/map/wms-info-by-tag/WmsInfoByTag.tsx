@@ -7,7 +7,7 @@ import { MapContext } from '../MapContext';
 interface Props {
     tag: string;
     // ingnoreTag?: boolean;
-    callback: (arr: { url: string, wms: Tile<TileWMS> }[]) => void
+    callback: (arr: { url: string, wms: Tile<TileWMS> }[], coordinate: number[]) => void
 }
 export default function WmsInfoByTag(props: Props) {
 
@@ -32,7 +32,7 @@ export default function WmsInfoByTag(props: Props) {
                     )!;
                     return { url, wms }
                 })
-            props.callback(layers);
+            props.callback(layers, event.coordinate);
         }
         map.on('click', onClick)
 

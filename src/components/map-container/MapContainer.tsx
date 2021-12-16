@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import View from '../map/view/View'
 import Map from '../map/Map'
 import WmsInfoByTag from '../map/wms-info-by-tag/WmsInfoByTag'
@@ -8,18 +8,39 @@ import { RestApi } from '../../util/restapi'
 import { Tile } from 'ol/layer';
 import { TileWMS } from 'ol/source';
 import Overlay from '../map/overlay/Overlay'
+import { IService } from '../../util/model'
+
+interface SelectedFeatureWithService {
+    service: IService,
+    features: any[];
+}
+
 export default function MapContainer() {
 
-
+    const [selectedFeatures, setSelectedFeatures] = useState<SelectedFeatureWithService[]>([]);
+    const [selectedCoordinate, setSelectedCoordinate] = useState<number[] | null>(null);
     const serviceList = useAppSelector(state => state.wms.serviceList);
     // const dispatch = useDispatch()
-    async function onWmsSelected(arr: { url: string, wms: Tile<TileWMS> }[],) {
+    async function onWmsSelected(arr: { url: string, wms: Tile<TileWMS> }[], coordinate: number[]) {
         if (arr.length === 0) {
+            setSelectedCoordinate(null);
+            setSelectedFeatures([])
             return;
         }
         const result = await RestApi.getGeojsonFromGetFeatureInfoUrlArray(arr.map(a => a.url));
-        const service = serviceList.find(ss => ss.id === arr[0].wms.get('serviceId'))
-        console.log(service, arr[0].wms, arr[0].wms.get('serviceId'), result[0])
+
+        setSelectedCoordinate(coordinate);
+        const features = result
+            .filter(r => r.length > 0)
+            .map((features, i) => {
+                const wms = arr[i].wms
+                const service = serviceList.find(ss => ss.id === wms.get('serviceId'))!
+                return { service, features }
+            });
+        console.log('features', features);
+        setSelectedFeatures(
+            features
+        )
 
     }
 
@@ -39,15 +60,23 @@ export default function MapContainer() {
                     </WmsLayer>
                 )}
                 <WmsInfoByTag callback={onWmsSelected} tag="GEOSERVER_WRITE" />
-                <Overlay x={3265008} y={4674636}>
-                    BLA BLA
-                    <div>DENEME</div>
-                    <button>DENEME</button>
-                </Overlay>
-                <Overlay x={3365000} y={4674636}>
-                    BLA BLA
-                </Overlay>
+                {
+                    selectedFeatures.length > 0 &&
+                    selectedCoordinate &&
+                    selectedCoordinate.length === 2 &&
+                    <Overlay x={selectedCoordinate[0]} y={selectedCoordinate[1]}>
+                        {selectedFeatures
+                            .map(item => <div key={item.service.id}>
+                                <h4>{item.service.alias}</h4>
+                                {item.features.map((f, i) => {
+                                    return <div key={i}>{f.properties.adi}</div>
+                                })}
+                            </div>
+                            )}
+                    </Overlay>
+                }
             </Map>
         </View>
     )
 }
+
