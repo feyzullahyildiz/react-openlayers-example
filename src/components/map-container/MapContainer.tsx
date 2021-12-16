@@ -9,6 +9,8 @@ import { Tile } from 'ol/layer';
 import { TileWMS } from 'ol/source';
 import Overlay from '../map/overlay/Overlay'
 import { IService } from '../../util/model'
+import { actionSetInfoData } from '../../redux/action/info'
+import { useDispatch } from 'react-redux'
 
 interface SelectedFeatureWithService {
     service: IService,
@@ -20,7 +22,7 @@ export default function MapContainer() {
     const [selectedFeatures, setSelectedFeatures] = useState<SelectedFeatureWithService[]>([]);
     const [selectedCoordinate, setSelectedCoordinate] = useState<number[] | null>(null);
     const serviceList = useAppSelector(state => state.wms.serviceList);
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
     async function onWmsSelected(arr: { url: string, wms: Tile<TileWMS> }[], coordinate: number[]) {
         if (arr.length === 0) {
             setSelectedCoordinate(null);
@@ -42,6 +44,12 @@ export default function MapContainer() {
             features
         )
 
+    }
+
+    function onFeatureSelect(service: IService, feature: any) {
+        dispatch(
+            actionSetInfoData(true, service, feature)
+        )
     }
 
     return (
@@ -66,10 +74,12 @@ export default function MapContainer() {
                     selectedCoordinate.length === 2 &&
                     <Overlay x={selectedCoordinate[0]} y={selectedCoordinate[1]}>
                         {selectedFeatures
-                            .map(item => <div key={item.service.id}>
-                                <h4>{item.service.alias}</h4>
-                                {item.features.map((f, i) => {
-                                    return <div key={i}>{f.properties.adi}</div>
+                            .map(ss => <div key={ss.service.id}>
+                                <h4>{ss.service.alias}</h4>
+                                {ss.features.map((f, i) => {
+                                    return <div key={i}
+                                        onClick={() => onFeatureSelect(ss.service, f)}
+                                    >{f.properties.adi}</div>
                                 })}
                             </div>
                             )}

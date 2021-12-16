@@ -35,4 +35,18 @@ export interface ILayer {
     desription: any;
     public: boolean;
     visible: boolean;
+    fields: IField[];
+}
+
+
+interface IField {
+    id: number,
+    layer_id: number,
+    domain_id: null | number,
+    name: string;
+    type: string;
+    alias: string;
+    created: string;
+    has_domain: boolean,
+    nullable: boolean,
 }
